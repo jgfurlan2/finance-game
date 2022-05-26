@@ -119,10 +119,12 @@ export default function Home(): JSX.Element {
   const [savings, setSavings] = React.useState(0)
   const [profit, setProfit] = React.useState(0)
   const [stageExpenses, setStageExpenses] = React.useState(0)
+  const [showModal, setShowModal] = React.useState(false)
 
-  function nextStage(_stg = stage, _stgs = stages): void {
+  function nextStage(_stg = stage, _stgs = stages, _svgs = savings): void {
     const stg = _stg ?? stage
     const stgs = _stgs ?? stages
+    const svgs = _svgs ?? savings
     const nextStage = (_stg ?? stage) + 1
 
     if (stg >= 0) {
@@ -132,16 +134,22 @@ export default function Home(): JSX.Element {
           income: stgs[stg].income,
           expenses: stgs[stg].expenses,
           stageExpenses,
-          savings: savings + profit - stageExpenses
+          savings: svgs + profit - stageExpenses
         }
       ])
     }
 
+    const newSavings = svgs + (profit - stageExpenses)
+
     if (nextStage >= stgs.length) {
+      setShowModal(true)
+      setSavings(newSavings)
+      setProfit(0)
+      setStageExpenses(0)
+
       return
     }
 
-    const newSavings = savings + (profit - stageExpenses)
     const nextProfit = stgs[nextStage].income > 0 ? stgs[nextStage].income - stgs[nextStage].expenses : 0
 
     setStage(nextStage)
@@ -166,7 +174,15 @@ export default function Home(): JSX.Element {
       setStageExpenses(0)
       setChart([])
       setStage(-1)
-      nextStage(-1, phases[nextPhase])
+      nextStage(-1, phases[nextPhase], 0)
+    }
+  }
+
+  function showToSave(_savings): number {
+    if (_savings + profit - stageExpenses > 0) {
+      return _savings + profit - stageExpenses
+    } else {
+      return 0
     }
   }
 
@@ -197,7 +213,7 @@ export default function Home(): JSX.Element {
                 <Savings>Poupança: R$ {savings}</Savings>
                 <Profit>Após os gastos fixos e somando sua poupança você tem: R$ {savings + profit}</Profit>
                 <RangeContainer>
-                  <ToSave>Guardar: R$ {savings + profit - stageExpenses}</ToSave>
+                  <ToSave>Guardar: R$ {showToSave(savings)}</ToSave>
                   <Form.Range
                     min={0}
                     value={stageExpenses}
@@ -247,7 +263,7 @@ export default function Home(): JSX.Element {
           </div>
         </div>
       </Container>
-      <Modal show={stage === stages.length - 1}>
+      <Modal show={showModal}>
         <Modal.Header>
           <Modal.Title>Fim de jogo</Modal.Title>
         </Modal.Header>
@@ -255,7 +271,14 @@ export default function Home(): JSX.Element {
           <p>{`Parabéns! Você conseguiu concluir todas as fases do jogo. Para continuar, clique em "Concluir"`}</p>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={nextPhase}>Concluir</Button>
+          <Button
+            onClick={() => {
+              setShowModal(false)
+              nextPhase()
+            }}
+          >
+            Concluir
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>
