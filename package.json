@@ -6,19 +6,23 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "typeorm": "typeorm-ts-node-esm"
   },
   "dependencies": {
-    "@prisma/client": "^3.14.0",
     "bootstrap": "^5.1.3",
     "chart.js": "^3.8.0",
     "next": "12.1.6",
     "nodemailer": "^6.7.5",
+    "pg": "^8.7.3",
     "react": "18.1.0",
     "react-bootstrap": "^2.4.0",
     "react-chartjs-2": "^4.1.0",
     "react-dom": "18.1.0",
-    "styled-components": "^5.3.5"
+    "reflect-metadata": "^0.1.13",
+    "styled-components": "^5.3.5",
+    "typeorm": "^0.3.6",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@sigmagf/eslint-config": "git+https://github.com/sigmagf/eslint-config.git",
@@ -43,7 +47,7 @@
     "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-react-hooks": "^4.5.0",
     "prettier": "^2.6.2",
-    "prisma": "^3.14.0",
+    "ts-node": "^10.8.0",
     "typescript": "4.7.2"
   }
 }

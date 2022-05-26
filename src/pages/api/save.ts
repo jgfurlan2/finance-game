@@ -1,12 +1,8 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { Finance, PrismaClient } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { DataSource } from 'typeorm'
 
-interface Body {
-  name: string
-  email: string
-  responses: GameResponse
-}
+import { FinanceGameSchema } from '../../backend/schemas/FinanceGameModel'
 
 interface Data {
   id?: string
@@ -15,7 +11,7 @@ interface Data {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>): Promise<void> {
   if (req.method === 'POST') {
-    const { name, email, responses } = req.body as Body
+    const { name, email, age, education, gender, responses } = req.body as FinanceGameModel
 
     if (!name || name.trim().length === 0) {
       res.status(400).json({ error: 'Name is required' })
@@ -29,23 +25,50 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       return
     }
 
+    if (!age || typeof age !== 'number' || age < 1 || age > 120) {
+      res.status(400).json({ error: 'Age is required' })
+
+      return
+    }
+
+    if (!education || education.trim().length === 0) {
+      res.status(400).json({ error: 'Education is required' })
+
+      return
+    }
+
+    if (!gender || gender.trim().length === 0 || (gender !== 'male' && gender !== 'female')) {
+      res.status(400).json({ error: 'Gender is required' })
+
+      return
+    }
+
     if (!responses || !Array.isArray(responses) || responses.length === 0) {
       res.status(400).json({ error: 'Responses is required' })
 
       return
     }
 
-    const prisma = new PrismaClient()
-
-    const response = await prisma.finance.create({
-      data: {
-        name,
-        email,
-        responses: JSON.stringify(responses)
+    const dataSource = new DataSource({
+      type: 'postgres',
+      url: process.env.DATABASE_URL,
+      ssl: true,
+      synchronize: true,
+      entities: [FinanceGameSchema],
+      extra: {
+        ssl: {
+          rejectUnauthorized: false
+        }
       }
     })
 
-    res.status(201).json({ id: response.id })
+    await dataSource.initialize()
+    await dataSource.transaction(async (manager) => {
+      const repository = manager.getRepository(FinanceGameSchema)
+      await repository.save({ name, email, age, education, gender, responses: JSON.stringify(responses) })
+    })
+
+    res.status(201).end()
   } else {
     res.status(405).end()
   }
