@@ -32,3 +32,12 @@ declare interface GameResponse {
   savings: number
   stageExpenses: number
 }
+
+declare interface FEFormResponses {
+  name: string
+  email: string
+  age: number
+  gender: import('react-select').SingleValue
+  education: import('react-select').SingleValue
+  questions: { value: string }[]
+}

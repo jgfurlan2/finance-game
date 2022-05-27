@@ -1,12 +1,16 @@
 import React from 'react'
 import { Button, Container, Form, Modal } from 'react-bootstrap'
 
-import { ChartElement } from '../components/Chart'
-import { Income, Expenses, Profit, Savings, RangeContainer, ToSave, ToSpend, Card } from '../styles'
+import { ChartElement } from '../Chart'
+import { Income, Expenses, Profit, Savings, RangeContainer, ToSave, ToSpend, Card } from './styled'
 
 interface FinanceGameProps {
   income: number
   expenses: number
+}
+
+interface Props {
+  onSubmit: (responses: GameResponse[][]) => void
 }
 
 const phase1Stages: FinanceGameProps[] = [
@@ -107,10 +111,10 @@ const phase2Stages: FinanceGameProps[] = [
   }
 ]
 
-export default function Home(): JSX.Element {
+export function Game({ onSubmit }: Props): JSX.Element {
   const phases: FinanceGameProps[][] = [phase1Stages, phase2Stages]
 
-  const [chart, setChart] = React.useState<GameResponse[]>([])
+  const [chart, setChart] = React.useState<GameResponse[][]>([])
   const [phase, setPhase] = React.useState<number>(0)
   const [stages, setStages] = React.useState<FinanceGameProps[]>(phase1Stages)
   const [stage, setStage] = React.useState(-1)
@@ -126,15 +130,19 @@ export default function Home(): JSX.Element {
     const nextStage = (_stg ?? stage) + 1
 
     if (stg >= 0) {
-      setChart((old) => [
-        ...old,
-        {
-          income: stgs[stg].income,
-          expenses: stgs[stg].expenses,
-          stageExpenses,
-          savings: svgs + profit - stageExpenses
-        }
-      ])
+      setChart((old) => {
+        old[phase] = [
+          ...old[phase],
+          {
+            income: stgs[stg].income,
+            expenses: stgs[stg].expenses,
+            stageExpenses,
+            savings: svgs + profit - stageExpenses
+          }
+        ]
+
+        return old
+      })
     }
 
     const newSavings = svgs + (profit - stageExpenses)
@@ -173,6 +181,8 @@ export default function Home(): JSX.Element {
       setChart([])
       setStage(-1)
       nextStage(-1, phases[nextPhase], 0)
+    } else {
+      onSubmit(chart)
     }
   }
 
@@ -226,35 +236,6 @@ export default function Home(): JSX.Element {
               </Card.Footer>
             </Card>
           )}
-          <div style={{ gridArea: 'C' }}>
-            <ChartElement
-              data={{
-                labels: chart.map((s, i) => i + 1),
-                datasets: [
-                  {
-                    label: 'Ganhos',
-                    data: chart.map((s) => s.income),
-                    borderColor: '#4CAF50'
-                  },
-                  {
-                    label: 'Gastos',
-                    data: chart.map((s) => s.expenses),
-                    borderColor: '#F44336'
-                  },
-                  {
-                    label: 'Gastos com qualidade de vida',
-                    data: chart.map((s) => s.stageExpenses),
-                    borderColor: '#f7c870'
-                  },
-                  {
-                    label: 'Poupança',
-                    data: chart.map((s) => s.savings),
-                    borderColor: '#2196F3'
-                  }
-                ]
-              }}
-            />
-          </div>
         </div>
       </Container>
       <Modal show={showModal}>
