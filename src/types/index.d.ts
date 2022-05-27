@@ -8,6 +8,24 @@ declare interface FinanceGameModel {
   responses: string
 }
 
+declare interface UserModel {
+  id: string
+  name: string
+  email: string
+  password: string
+}
+
+declare interface BannedTokenModel {
+  id: string
+  token: string
+}
+
+declare interface TokenModel {
+  id: string
+  token: string
+  expiresIn: Date
+}
+
 declare interface GameResponse {
   income: number
   expenses: number
