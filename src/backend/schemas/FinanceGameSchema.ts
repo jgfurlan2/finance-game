@@ -33,6 +33,11 @@ export const FinanceGameSchema = new EntitySchema<FinanceGameModel>({
     responses: {
       type: 'text',
       nullable: false
+    },
+    createdAt: {
+      type: 'timestamp',
+      nullable: false,
+      createDate: true
     }
   }
 })

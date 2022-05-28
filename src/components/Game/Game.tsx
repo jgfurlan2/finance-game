@@ -4,11 +4,6 @@ import { Button, Container, Form, Modal } from 'react-bootstrap'
 import { Modals } from './Modals'
 import { Income, Expenses, Profit, Savings, RangeContainer, ToSave, ToSpend, Card } from './styled'
 
-interface FinanceGameProps {
-  income: number
-  expenses: number
-}
-
 interface Props {
   onSubmit: (responses: GameResponse[][]) => void
 }
@@ -130,20 +125,20 @@ export function Game({ onSubmit }: Props): JSX.Element {
     const nextStage = (_stg ?? stage) + 1
 
     if (stg >= 0) {
-      setChart((old) => {
-        console.log(phase)
-        old[phase] = [
-          ...(old[phase] ?? []),
-          {
-            income: stgs[stg].income,
-            expenses: stgs[stg].expenses,
-            stageExpenses,
-            savings: svgs + profit - stageExpenses
-          }
-        ]
+      const newChartData = [...chart]
 
-        return old
+      if (!newChartData[phase]) {
+        newChartData[phase] = []
+      }
+
+      newChartData[phase].push({
+        income: stgs[stg].income,
+        expenses: stgs[stg].expenses,
+        stageExpenses,
+        savings: svgs + profit - stageExpenses
       })
+
+      setChart(newChartData)
     }
 
     const newSavings = svgs + (profit - stageExpenses)
@@ -179,7 +174,6 @@ export function Game({ onSubmit }: Props): JSX.Element {
       setSavings(0)
       setProfit(0)
       setStageExpenses(0)
-      setChart([])
       setStage(-1)
       nextStage(-1, phases[nextPhase], 0)
     } else {
@@ -229,10 +223,10 @@ export function Game({ onSubmit }: Props): JSX.Element {
               </RangeContainer>
             </Card.Body>
             <Card.Footer>
-              {phase < phases.length - 1 ? (
+              {stage < stages.length - 1 ? (
                 <Button onClick={() => nextStage()}>Proximo período</Button>
               ) : (
-                <Button onClick={() => nextStage()}>Concluir</Button>
+                <Button onClick={() => nextStage()}>Concluir fase</Button>
               )}
             </Card.Footer>
           </Card>
@@ -240,10 +234,21 @@ export function Game({ onSubmit }: Props): JSX.Element {
       </Container>
       <Modal show={showModal}>
         <Modal.Header>
-          <Modal.Title>Fim de jogo</Modal.Title>
+          <Modal.Title>{phase < phases.length - 1 ? 'Fim da primeira fase' : 'Fim de jogo'}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>{`Parabéns! Você conseguiu concluir todas as fases do jogo. Para continuar, clique em "Concluir"`}</p>
+          {phase < phases.length - 1 ? (
+            <>
+              <p>Parabéns! Você terminou a primeira fase!</p>
+              <p>A última fase é quase idêntica à primeira. Com uma mudança importante:</p>
+              <p>São 13 períodos:</p>
+              <p>10 em que você tem renda e 3 que você está aposentado, com renda zero.</p>
+              <p>Além de fazer a mesma poupança de emergência, você precisa poupar para sua aposentadoria.</p>
+              <p>Importante: é esperado que sua reserva para aposentadoria cubra três períodos de gastos fixos.</p>
+            </>
+          ) : (
+            <p>{`Parabéns! Você conseguiu concluir todas as fases do jogo. Para continuar, clique em "Concluir"`}</p>
+          )}
         </Modal.Body>
         <Modal.Footer>
           <Button
@@ -252,7 +257,7 @@ export function Game({ onSubmit }: Props): JSX.Element {
               nextPhase()
             }}
           >
-            Concluir
+            {phase < phases.length - 1 ? 'Próxima fase' : 'Concluir'}
           </Button>
         </Modal.Footer>
       </Modal>

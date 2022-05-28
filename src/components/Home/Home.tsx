@@ -174,9 +174,9 @@ export function Home({ onSubmit }: Props): JSX.Element {
                       </Form.Label>
                       <ReactSelect
                         options={[
-                          { value: 'masculino', label: 'Masculino' },
-                          { value: 'feminino', label: 'Feminino' },
-                          { value: 'nao', label: 'Não quero declarar' }
+                          { value: 'male', label: 'Masculino' },
+                          { value: 'female', label: 'Feminino' },
+                          { value: 'unknown', label: 'Não quero declarar' }
                         ]}
                         styles={{
                           control(provided, state) {

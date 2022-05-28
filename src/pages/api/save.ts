@@ -38,7 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         return
       }
 
-      if (!age || typeof age !== 'number' || age < 1 || age > 120) {
+      if (!age || Number(age) < 18 || Number(age) > 120) {
         res.status(400).json({ error: 'Age is required' })
 
         return
@@ -50,21 +50,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         return
       }
 
-      if (!gender || gender.trim().length === 0 || (gender !== 'male' && gender !== 'female')) {
+      if (!gender || gender.trim().length === 0 || (gender !== 'male' && gender !== 'female' && gender !== 'unknown')) {
         res.status(400).json({ error: 'Gender is required' })
 
         return
       }
 
-      if (!responses || !Array.isArray(responses) || responses.length === 0) {
+      if (!responses) {
         res.status(400).json({ error: 'Responses is required' })
 
         return
       }
 
       await dataSource.transaction(async (manager) => {
-        const repository = manager.getRepository(FinanceGameSchema)
-        await repository.save({ name, email, age, education, gender, responses: JSON.stringify(responses) })
+        await manager.getRepository(FinanceGameSchema).save({
+          name,
+          email,
+          age,
+          education,
+          gender,
+          responses: JSON.stringify(responses),
+          createdAt: new Date()
+        })
+
+        await manager.getRepository(BannedTokenSchema).save({ token })
       })
 
       await dataSource.destroy()

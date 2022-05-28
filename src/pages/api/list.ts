@@ -28,7 +28,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         return
       }
 
-      console.log(tokenPayload)
       const userExists = await dataSource.getRepository(UserSchema).findOne({ where: { id: tokenPayload.id } })
 
       if (!userExists) {

@@ -1,5 +1,7 @@
 import React from 'react'
-import { Button, Card, Table } from 'react-bootstrap'
+import { Button, Table } from 'react-bootstrap'
+
+import { parse } from 'json2csv'
 
 import { AuthContext } from '~/context/AuthContext'
 
@@ -32,13 +34,53 @@ export const ResponsesResume: React.FC = () => {
     }
   }
 
+  function generateCSV(): void {
+    const jsonCSV = responses.map((res) => {
+      const responses: FEFinanceGame['responses'] = JSON.parse(res.responses)
+      const flatForm = responses.form.reduce((prev, crr, i) => ({ ...prev, [`formulario-questao-${i + 1}`]: crr }), {})
+      const flatGame = responses.game.reduce(
+        (prev, crr, i) => ({
+          ...prev,
+          ...crr.reduce((gprev, gcrr, gi) => {
+            return {
+              ...gprev,
+              [`game-fase-${i + 1}-estagio-${gi + 1}-ganhos`]: gcrr.income,
+              [`game-fase-${i + 1}-estagio-${gi + 1}-despesas`]: gcrr.expenses,
+              [`game-fase-${i + 1}-estagio-${gi + 1}-custo-de-vida`]: gcrr.stageExpenses,
+              [`game-fase-${i + 1}-estagio-${gi + 1}-poupanca`]: gcrr.savings
+            }
+          }, {})
+        }),
+        {}
+      )
+
+      return {
+        nome: res.name,
+        'e-mail': res.email,
+        idade: res.age,
+        sexo: res.gender,
+        escolaridade: res.education,
+        ...flatForm,
+        ...flatGame
+      }
+    })
+
+    const hiddenElement = document.createElement('a')
+    hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(parse(jsonCSV))
+    hiddenElement.target = '_blank'
+    hiddenElement.download = 'respostas.csv'
+    hiddenElement.click()
+  }
+
   React.useEffect(() => {
     handleGetData()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="mt-2">
-      <Button onClick={console.log}>Baixar CSV</Button>
+      <Button onClick={generateCSV} className="mb-2">
+        Baixar CSV
+      </Button>
       <Table striped bordered hover size="sm">
         <thead>
           <tr>
