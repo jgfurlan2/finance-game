@@ -37,7 +37,7 @@ declare interface FEFormResponses {
   name: string
   email: string
   age: number
-  gender: import('react-select').SingleValue
-  education: import('react-select').SingleValue
-  questions: { value: string }[]
+  gender: { value: string; label: string }
+  education: { value: string; label: string }
+  questions: string[]
 }

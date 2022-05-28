@@ -3,10 +3,11 @@ import { Container } from 'react-bootstrap'
 
 import { GetServerSideProps } from 'next'
 
+import { TokenService } from '~/backend/services/TokenService'
+
 import { Game } from '../components/Game'
 import { Home } from '../components/Home'
 
-import { TokenService } from '~/backend/services/TokenService'
 interface Props {
   token: string
 }
@@ -14,7 +15,7 @@ interface Props {
 interface FEFinanceGame extends Omit<FinanceGameModel, 'id' | 'responses'> {
   responses: {
     form: string[]
-    game: Record<string, GameResponse[]>
+    game: GameResponse[][]
   }
 }
 
@@ -22,6 +23,8 @@ export default function Index({ token }: Props): JSX.Element {
   const [financeGame, setFinanceGame] = React.useState<FEFinanceGame>()
 
   function onFormSubmit(response: FEFormResponses): void {
+    console.log(response)
+
     setFinanceGame({
       name: response.name,
       age: response.age,
@@ -29,13 +32,22 @@ export default function Index({ token }: Props): JSX.Element {
       email: response.email,
       gender: response.gender.value,
       responses: {
-        form: response.questions.map((e) => e.value),
+        form: response.questions,
         game: null
       }
     })
   }
 
-  function onGameSubmit(response: GameResponse[][]): void {}
+  function onGameSubmit(response: GameResponse[][]): void {
+    setFinanceGame((old) => ({
+      ...old,
+      responses: { ...old.responses, game: response }
+    }))
+  }
+
+  React.useEffect(() => {
+    console.log(financeGame)
+  }, [financeGame])
 
   return (
     <Container>{financeGame == null ? <Home onSubmit={onFormSubmit} /> : <Game onSubmit={onGameSubmit} />}</Container>

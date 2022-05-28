@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Container, Form, Modal } from 'react-bootstrap'
 
-import { ChartElement } from '../Chart'
+import { Modals } from './Modals'
 import { Income, Expenses, Profit, Savings, RangeContainer, ToSave, ToSpend, Card } from './styled'
 
 interface FinanceGameProps {
@@ -19,7 +19,7 @@ const phase1Stages: FinanceGameProps[] = [
     expenses: 7
   },
   {
-    income: 9,
+    income: 11,
     expenses: 7
   },
   {
@@ -27,7 +27,7 @@ const phase1Stages: FinanceGameProps[] = [
     expenses: 7
   },
   {
-    income: 9,
+    income: 11,
     expenses: 7
   },
   {
@@ -35,7 +35,7 @@ const phase1Stages: FinanceGameProps[] = [
     expenses: 7
   },
   {
-    income: 9,
+    income: 11,
     expenses: 7
   },
   {
@@ -43,7 +43,7 @@ const phase1Stages: FinanceGameProps[] = [
     expenses: 7
   },
   {
-    income: 9,
+    income: 11,
     expenses: 7
   },
   {
@@ -51,7 +51,7 @@ const phase1Stages: FinanceGameProps[] = [
     expenses: 7
   },
   {
-    income: 9,
+    income: 11,
     expenses: 7
   }
 ]
@@ -62,7 +62,7 @@ const phase2Stages: FinanceGameProps[] = [
     expenses: 7
   },
   {
-    income: 9,
+    income: 11,
     expenses: 7
   },
   {
@@ -70,7 +70,7 @@ const phase2Stages: FinanceGameProps[] = [
     expenses: 7
   },
   {
-    income: 9,
+    income: 11,
     expenses: 7
   },
   {
@@ -78,7 +78,7 @@ const phase2Stages: FinanceGameProps[] = [
     expenses: 7
   },
   {
-    income: 9,
+    income: 11,
     expenses: 7
   },
   {
@@ -86,7 +86,7 @@ const phase2Stages: FinanceGameProps[] = [
     expenses: 7
   },
   {
-    income: 9,
+    income: 11,
     expenses: 7
   },
   {
@@ -94,7 +94,7 @@ const phase2Stages: FinanceGameProps[] = [
     expenses: 7
   },
   {
-    income: 9,
+    income: 11,
     expenses: 7
   },
   {
@@ -131,8 +131,9 @@ export function Game({ onSubmit }: Props): JSX.Element {
 
     if (stg >= 0) {
       setChart((old) => {
+        console.log(phase)
         old[phase] = [
-          ...old[phase],
+          ...(old[phase] ?? []),
           {
             income: stgs[stg].income,
             expenses: stgs[stg].expenses,
@@ -186,7 +187,7 @@ export function Game({ onSubmit }: Props): JSX.Element {
     }
   }
 
-  function showToSave(_savings): number {
+  function showToSave(_savings: number): number {
     if (_savings + profit - stageExpenses > 0) {
       return _savings + profit - stageExpenses
     } else {
@@ -202,41 +203,40 @@ export function Game({ onSubmit }: Props): JSX.Element {
 
   return (
     <>
+      <Modals />
       <Container>
-        <div style={{ display: 'grid', gridTemplateAreas: "'A C'", gridTemplateColumns: '1fr 1fr' }}>
-          {stage >= 0 && stages[stage] && (
-            <Card style={{ gridArea: 'A' }}>
-              <Card.Header>
-                <Card.Title>
-                  Fase {phase + 1} - Período {stage + 1} de {stages.length}
-                </Card.Title>
-              </Card.Header>
-              <Card.Body>
-                <Income>Ganhos no mês: R$ {stages[stage].income}</Income>
-                <Expenses>Gastos no mês: R$ {stages[stage].expenses}</Expenses>
-                <Savings>Poupança: R$ {savings}</Savings>
-                <Profit>Após os gastos fixos e somando sua poupança você tem: R$ {savings + profit}</Profit>
-                <RangeContainer>
-                  <ToSave>Guardar: R$ {showToSave(savings)}</ToSave>
-                  <Form.Range
-                    min={0}
-                    value={stageExpenses}
-                    max={savings + profit}
-                    onChange={(v) => setStageExpenses(v.target.valueAsNumber)}
-                  />
-                  <ToSpend>Gastos com qualidade de vida: R$ {stageExpenses}</ToSpend>
-                </RangeContainer>
-              </Card.Body>
-              <Card.Footer>
-                {phase < phases.length - 1 ? (
-                  <Button onClick={() => nextStage()}>Proximo período</Button>
-                ) : (
-                  <Button onClick={() => nextStage()}>Concluir</Button>
-                )}
-              </Card.Footer>
-            </Card>
-          )}
-        </div>
+        {stage >= 0 && stages[stage] && (
+          <Card className="mt-4">
+            <Card.Header>
+              <Card.Title>
+                Fase {phase + 1} - Período {stage + 1} de {stages.length}
+              </Card.Title>
+            </Card.Header>
+            <Card.Body>
+              <Income>Ganhos no mês: R$ {stages[stage].income}</Income>
+              <Expenses>Gastos no mês: R$ {stages[stage].expenses}</Expenses>
+              <Savings>Poupança: R$ {savings}</Savings>
+              <Profit>Após os gastos fixos e somando sua poupança você tem: R$ {savings + profit}</Profit>
+              <RangeContainer>
+                <ToSave>Guardar: R$ {showToSave(savings)}</ToSave>
+                <Form.Range
+                  min={0}
+                  value={stageExpenses}
+                  max={savings + profit}
+                  onChange={(v) => setStageExpenses(v.target.valueAsNumber)}
+                />
+                <ToSpend>Gastos com qualidade de vida: R$ {stageExpenses}</ToSpend>
+              </RangeContainer>
+            </Card.Body>
+            <Card.Footer>
+              {phase < phases.length - 1 ? (
+                <Button onClick={() => nextStage()}>Proximo período</Button>
+              ) : (
+                <Button onClick={() => nextStage()}>Concluir</Button>
+              )}
+            </Card.Footer>
+          </Card>
+        )}
       </Container>
       <Modal show={showModal}>
         <Modal.Header>
