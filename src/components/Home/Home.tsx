@@ -275,6 +275,7 @@ export function Home({ onSubmit }: Props): JSX.Element {
                         key={optionIndex}
                         name={`questions.${questionIndex}`}
                         control={control}
+                        rules={{ required: true }}
                         render={({ field }) => (
                           <Form.Check
                             key={optionIndex}

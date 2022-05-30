@@ -1,4 +1,6 @@
+import { SES } from '@aws-sdk/client-ses'
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { createTransport } from 'nodemailer'
 
 import { BannedTokenSchema } from '~/backend/schemas/BannedTokenSchema'
 import { FinanceGameSchema } from '~/backend/schemas/FinanceGameSchema'
@@ -77,6 +79,73 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       })
 
       await dataSource.destroy()
+
+      const transport = createTransport({
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        host: String(process.env.MAIL_HOST),
+        port: process.env.MAIL_PORT,
+        auth: {
+          user: process.env.MAIL_USER,
+          pass: process.env.MAIL_PASS
+        }
+      })
+
+      const ses = new SES({
+        credentials: {
+          accessKeyId: process.env.FG_AWS_ACCESS_KEY_ID,
+          secretAccessKey: process.env.FG_AWS_SECRET_ACCESS_KEY
+        },
+        region: process.env.FG_AWS_DEFAULT_REGION
+      })
+
+      await ses.sendEmail({
+        Source: 'Finance Game <noreply@furlansoftware.com>',
+        Destination: {
+          ToAddresses: [`${name} <${email}>`]
+        },
+        Message: {
+          Subject: { Data: 'Obrigado por participar do teste!' },
+          Body: {
+            Html: {
+              Data: `
+                <table style="width: 100%;font-family:sans-serif">
+                  <thead>
+                    <tr>
+                      <th style="text-align:left;">NÍVEL</th>
+                      <th style="text-align:left;">PERÍODO</th>
+                      <th style="text-align:left;">RENDA</th>
+                      <th style="text-align:left;">DESPESAS FIXAS</th>
+                      <th style="text-align:left;">DESPESAS COM QUALIDADE DE VIDA</th>
+                      <th style="text-align:left;">POUPANÇA NO FINAL DO NÍVEL</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${(typeof responses === 'string' ? JSON.parse(responses) : responses).game
+                      .map((l: GameResponse[], il) => {
+                        return l
+                          .map((entries, is) => {
+                            return `
+                              <tr>
+                                <td>${il + 1}</td>
+                                <td>${is + 1}</td>
+                                <td>${entries.income}</td>
+                                <td>${entries.expenses}</td>
+                                <td>${entries.stageExpenses}</td>
+                                <td>${entries.savings}</td>
+                              </tr>
+                            `
+                          })
+                          .join('\n')
+                      })
+                      .join('\n')}
+                  </tbody>
+                </table>
+              `
+            }
+          }
+        }
+      })
 
       res.status(201).end()
     } else {

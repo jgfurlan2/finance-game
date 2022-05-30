@@ -116,7 +116,7 @@ export function Game({ onSubmit }: Props): JSX.Element {
   const [savings, setSavings] = React.useState(0)
   const [profit, setProfit] = React.useState(0)
   const [stageExpenses, setStageExpenses] = React.useState(0)
-  const [showModal, setShowModal] = React.useState(false)
+  const [showModal, setShowModal] = React.useState(0)
 
   function nextStage(_stg = stage, _stgs = stages, _svgs = savings): void {
     const stg = _stg ?? stage
@@ -144,7 +144,7 @@ export function Game({ onSubmit }: Props): JSX.Element {
     const newSavings = svgs + (profit - stageExpenses)
 
     if (nextStage >= stgs.length) {
-      setShowModal(true)
+      setShowModal((old) => old + 1)
       setSavings(newSavings)
       setProfit(0)
       setStageExpenses(0)
@@ -212,14 +212,24 @@ export function Game({ onSubmit }: Props): JSX.Element {
               <Savings>Poupança: R$ {savings}</Savings>
               <Profit>Após os gastos fixos e somando sua poupança você tem: R$ {savings + profit}</Profit>
               <RangeContainer>
-                <ToSave>Guardar: R$ {showToSave(savings)}</ToSave>
+                <ToSave className="d-none d-sm-block">Guardar: R$ {showToSave(savings)}</ToSave>
+                <ToSave className="d-block d-sm-none" breakLine={true}>
+                  Guardar
+                  <br />
+                  R$ {showToSave(savings)}
+                </ToSave>
                 <Form.Range
                   min={0}
                   value={stageExpenses}
                   max={savings + profit}
                   onChange={(v) => setStageExpenses(v.target.valueAsNumber)}
                 />
-                <ToSpend>Gastos com qualidade de vida: R$ {stageExpenses}</ToSpend>
+                <ToSpend className="d-none d-sm-block">Gastos com qualidade de vida: R$ {stageExpenses}</ToSpend>
+                <ToSpend className="d-block d-sm-none" breakLine={true}>
+                  Gastar
+                  <br />
+                  R$ {stageExpenses}
+                </ToSpend>
               </RangeContainer>
             </Card.Body>
             <Card.Footer>
@@ -232,32 +242,65 @@ export function Game({ onSubmit }: Props): JSX.Element {
           </Card>
         )}
       </Container>
-      <Modal show={showModal}>
-        <Modal.Header>
-          <Modal.Title>{phase < phases.length - 1 ? 'Fim da primeira fase' : 'Fim de jogo'}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {phase < phases.length - 1 ? (
-            <>
+      {phase === 0 && (
+        <>
+          <Modal show={showModal === 1}>
+            <Modal.Header>
+              <Modal.Title>Fim da primeira fase</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
               <p>Parabéns! Você terminou a primeira fase!</p>
               <p>A última fase é quase idêntica à primeira. Com uma mudança importante:</p>
               <p>São 13 períodos:</p>
               <p>10 em que você tem renda e 3 que você está aposentado, com renda zero.</p>
               <p>Além de fazer a mesma poupança de emergência, você precisa poupar para sua aposentadoria.</p>
               <p>Importante: é esperado que sua reserva para aposentadoria cubra três períodos de gastos fixos.</p>
-            </>
-          ) : (
-            <p>{`Parabéns! Você conseguiu concluir todas as fases do jogo. Para continuar, clique em "Concluir"`}</p>
-          )}
+            </Modal.Body>
+            <Modal.Footer>
+              <Button onClick={() => setShowModal((old) => old + 1)}>
+                Certo. Além da reserva de emergência, preciso me preparar para três períodos sem renda. Próximo!
+              </Button>
+            </Modal.Footer>
+          </Modal>
+
+          <Modal show={showModal === 2}>
+            <Modal.Header>
+              <Modal.Title>Última fase!</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <p>13 períodos, 10 períodos iniciais com renda, 3 últimos sem renda.</p>
+              <p>Reserva de emergência permanece em dois períodos de gastos fixos.</p>
+              <p>Reserva para aposentadoria ótima é de 3 períodos de gastos fixos.</p>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                onClick={() => {
+                  setShowModal(0)
+                  nextPhase()
+                }}
+              >
+                Entendi. Próxima fase!
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        </>
+      )}
+
+      <Modal show={phase === 1 && showModal === 1}>
+        <Modal.Header>
+          <Modal.Title>Fim de jogo</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {`Parabéns! Você conseguiu concluir todas as fases do jogo. Para enviar suas respostas, clique em "Concluir"`}
         </Modal.Body>
         <Modal.Footer>
           <Button
             onClick={() => {
-              setShowModal(false)
+              setShowModal(0)
               nextPhase()
             }}
           >
-            {phase < phases.length - 1 ? 'Próxima fase' : 'Concluir'}
+            Concluir
           </Button>
         </Modal.Footer>
       </Modal>

@@ -16,15 +16,21 @@ export const Savings = styled.div``
 
 export const RangeContainer = styled.div`
   display: flex;
+  align-items: center;
   gap: 10px;
 `
 
-export const ToSave = styled.div`
-  display: inline;
-  white-space: nowrap;
+export const ToSave = styled.div<{ breakLine?: boolean }>`
+  white-space: ${({ breakLine }) => (breakLine ? 'normal' : 'nowrap')};
+  text-align: center;
 `
 
-export const ToSpend = styled.div`
-  display: inline;
-  white-space: nowrap;
+export const ToSpend = styled.div<{ breakLine?: boolean }>`
+  white-space: ${({ breakLine }) => (breakLine ? 'normal' : 'nowrap')};
+  text-align: center;
+`
+
+export const ModalImage = styled.img`
+  border: 1px solid var(--bs-gray);
+  border-radius: 4px;
 `
