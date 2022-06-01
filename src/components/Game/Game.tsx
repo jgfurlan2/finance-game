@@ -11,98 +11,98 @@ interface Props {
 const phase1Stages: FinanceGameProps[] = [
   {
     income: 11,
-    expenses: 7
+    expenses: 6
   },
   {
     income: 11,
-    expenses: 7
+    expenses: 6
+  },
+  {
+    income: 9,
+    expenses: 6
   },
   {
     income: 11,
-    expenses: 7
+    expenses: 6
+  },
+  {
+    income: 9,
+    expenses: 6
+  },
+  {
+    income: 9,
+    expenses: 6
   },
   {
     income: 11,
-    expenses: 7
+    expenses: 6
+  },
+  {
+    income: 9,
+    expenses: 6
+  },
+  {
+    income: 9,
+    expenses: 6
   },
   {
     income: 11,
-    expenses: 7
-  },
-  {
-    income: 11,
-    expenses: 7
-  },
-  {
-    income: 11,
-    expenses: 7
-  },
-  {
-    income: 11,
-    expenses: 7
-  },
-  {
-    income: 11,
-    expenses: 7
-  },
-  {
-    income: 11,
-    expenses: 7
+    expenses: 6
   }
 ]
 
 const phase2Stages: FinanceGameProps[] = [
   {
     income: 11,
-    expenses: 7
+    expenses: 6
   },
   {
     income: 11,
-    expenses: 7
+    expenses: 6
+  },
+  {
+    income: 9,
+    expenses: 6
   },
   {
     income: 11,
-    expenses: 7
+    expenses: 6
+  },
+  {
+    income: 9,
+    expenses: 6
+  },
+  {
+    income: 9,
+    expenses: 6
   },
   {
     income: 11,
-    expenses: 7
+    expenses: 6
+  },
+  {
+    income: 9,
+    expenses: 6
+  },
+  {
+    income: 9,
+    expenses: 6
   },
   {
     income: 11,
-    expenses: 7
-  },
-  {
-    income: 11,
-    expenses: 7
-  },
-  {
-    income: 11,
-    expenses: 7
-  },
-  {
-    income: 11,
-    expenses: 7
-  },
-  {
-    income: 11,
-    expenses: 7
-  },
-  {
-    income: 11,
-    expenses: 7
+    expenses: 6
   },
   {
     income: 0,
-    expenses: 7
+    expenses: 6
   },
   {
     income: 0,
-    expenses: 7
+    expenses: 6
   },
   {
     income: 0,
-    expenses: 7
+    expenses: 6
   }
 ]
 
@@ -124,6 +124,16 @@ export function Game({ onSubmit }: Props): JSX.Element {
     const svgs = _svgs ?? savings
     const nextStage = (_stg ?? stage) + 1
 
+    console.log('profit', profit)
+    console.log('stageExpenses', stageExpenses)
+    console.log('svgs', svgs)
+
+    let newSavings = svgs + (profit - stageExpenses)
+
+    if (newSavings < 0) {
+      newSavings = 0
+    }
+
     if (stg >= 0) {
       const newChartData = [...chart]
 
@@ -135,13 +145,11 @@ export function Game({ onSubmit }: Props): JSX.Element {
         income: stgs[stg].income,
         expenses: stgs[stg].expenses,
         stageExpenses,
-        savings: svgs + profit - stageExpenses
+        savings: newSavings
       })
 
       setChart(newChartData)
     }
-
-    const newSavings = svgs + (profit - stageExpenses)
 
     if (nextStage >= stgs.length) {
       setShowModal((old) => old + 1)
@@ -182,8 +190,8 @@ export function Game({ onSubmit }: Props): JSX.Element {
   }
 
   function showToSave(_savings: number): number {
-    if (_savings + profit - stageExpenses > 0) {
-      return _savings + profit - stageExpenses
+    if (profit - stageExpenses > 0) {
+      return profit - stageExpenses
     } else {
       return 0
     }
@@ -203,18 +211,18 @@ export function Game({ onSubmit }: Props): JSX.Element {
           <Card className="mt-4">
             <Card.Header>
               <Card.Title>
-                Fase {phase + 1} - Período {stage + 1} de {stages.length}
+                {phase === 0 ? 'Primeira' : 'Segunda'} Fase - Período {stage + 1} de {stages.length}
               </Card.Title>
             </Card.Header>
             <Card.Body>
-              <Income>Ganhos no mês: R$ {stages[stage].income}</Income>
-              <Expenses>Gastos no mês: R$ {stages[stage].expenses}</Expenses>
-              <Savings>Poupança: R$ {savings}</Savings>
+              <Income>Ganhos no período: R$ {stages[stage].income}</Income>
+              <Expenses>Gastos fixos: R$ {stages[stage].expenses}</Expenses>
+              <Savings>Poupança acumulada nos períodos anteriores: R$ {savings}</Savings>
               <Profit>Após os gastos fixos e somando sua poupança você tem: R$ {savings + profit}</Profit>
               <RangeContainer>
-                <ToSave className="d-none d-sm-block">Guardar: R$ {showToSave(savings)}</ToSave>
+                <ToSave className="d-none d-sm-block">Poupar: R$ {showToSave(savings)}</ToSave>
                 <ToSave className="d-block d-sm-none" breakLine={true}>
-                  Guardar
+                  Poupar
                   <br />
                   R$ {showToSave(savings)}
                 </ToSave>
@@ -254,7 +262,10 @@ export function Game({ onSubmit }: Props): JSX.Element {
               <p>São 13 períodos:</p>
               <p>10 em que você tem renda e 3 que você está aposentado, com renda zero.</p>
               <p>Além de fazer a mesma poupança de emergência, você precisa poupar para sua aposentadoria.</p>
-              <p>Importante: é esperado que sua reserva para aposentadoria cubra três períodos de gastos fixos.</p>
+              <p>
+                Importante: é esperado que sua reverva para aposentadoria represente 10% dos seus ganhos ao longo da
+                vida.
+              </p>
             </Modal.Body>
             <Modal.Footer>
               <Button onClick={() => setShowModal((old) => old + 1)}>
@@ -291,7 +302,9 @@ export function Game({ onSubmit }: Props): JSX.Element {
           <Modal.Title>Fim de jogo</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {`Parabéns! Você conseguiu concluir todas as fases do jogo. Para enviar suas respostas, clique em "Concluir"`}
+          {savings > 0
+            ? `Parabéns! Você conseguiu finalizar o jogo com saldo positivo! Para enviar suas respostas, clique em "Concluir"`
+            : `Parabéns! Você finalizou o jogo! Para enviar suas respostas, clique em "Concluir"`}
         </Modal.Body>
         <Modal.Footer>
           <Button

@@ -14,11 +14,9 @@ export const Modals: React.FC = () => {
         </Modal.Header>
         <Modal.Body>
           <p>Você está no mercado de trabalho e tem uma renda que pode oscilar.</p>
-          <p>São 10 períodos em que você decidirá entre poupar e fazer uma reserva de emergência.</p>
-          <p>
-            Importante: Como sua renda pode variar, é esperado que sua reserva para emergência possa cobrir dois meses
-            dos seus gastos fixos. Ao final dos 10 períodos não é preciso poupar mais do que isso.
-          </p>
+          <p>Seus gastos fixos não oscilam.</p>
+          <p>Seu objetivo é formar uma reserva para emergência que corresponde a dois períodos de gastos fixos.</p>
+          <p>Não é necessário poupar mais do que isso ao fim dos 10 períodos!</p>
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={() => setShowModal((old) => old + 1)}>

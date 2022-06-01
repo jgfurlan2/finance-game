@@ -69,8 +69,10 @@ export function Home({ onSubmit }: Props): JSX.Element {
 
       <Row className="mb-4">
         <Col xs={12}>
+          <Paragraph>Obrigado por participar do Jogo do Consumo!</Paragraph>
           <Paragraph>
-            Obrigado por participar do Jogo do Consumo! Por favor, antes de iniciar, responda às perguntas abaixo:
+            Seus dados não serão compartilhados e as respostas possuem fins estritamente acadêmicos. Por favor, antes de
+            iniciar, responda às perguntas abaixo:
           </Paragraph>
         </Col>
       </Row>
@@ -108,7 +110,8 @@ export function Home({ onSubmit }: Props): JSX.Element {
                   control={control}
                   rules={{
                     required: true,
-                    pattern: /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
+                    pattern:
+                      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
                   }}
                   render={({ field, fieldState }) => (
                     <Form.Group>
@@ -175,8 +178,7 @@ export function Home({ onSubmit }: Props): JSX.Element {
                       <ReactSelect
                         options={[
                           { value: 'male', label: 'Masculino' },
-                          { value: 'female', label: 'Feminino' },
-                          { value: 'unknown', label: 'Não quero declarar' }
+                          { value: 'female', label: 'Feminino' }
                         ]}
                         styles={{
                           control(provided, state) {
@@ -225,6 +227,7 @@ export function Home({ onSubmit }: Props): JSX.Element {
                         options={[
                           { value: 'fundamental', label: 'Ensino fundamental completo' },
                           { value: 'medio', label: 'Ensino médio completo' },
+                          { value: 'superior-andamento', label: 'Ensino superior em andamento' },
                           { value: 'superior', label: 'Ensino superior completo' },
                           { value: 'pos', label: 'Pós-graduação' }
                         ]}
