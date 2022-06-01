@@ -124,15 +124,7 @@ export function Game({ onSubmit }: Props): JSX.Element {
     const svgs = _svgs ?? savings
     const nextStage = (_stg ?? stage) + 1
 
-    console.log('profit', profit)
-    console.log('stageExpenses', stageExpenses)
-    console.log('svgs', svgs)
-
-    let newSavings = svgs + (profit - stageExpenses)
-
-    if (newSavings < 0) {
-      newSavings = 0
-    }
+    const newSavings = svgs + (profit - stageExpenses)
 
     if (stg >= 0) {
       const newChartData = [...chart]
@@ -160,17 +152,12 @@ export function Game({ onSubmit }: Props): JSX.Element {
       return
     }
 
-    const nextProfit = stgs[nextStage].income > 0 ? stgs[nextStage].income - stgs[nextStage].expenses : 0
+    const nextProfit = stgs[nextStage].income - stgs[nextStage].expenses
 
     setStage(nextStage)
     setProfit(nextProfit)
-    setStageExpenses(nextProfit)
-
-    if (stages[nextStage].income === 0) {
-      setSavings(newSavings - stages[nextStage].expenses)
-    } else {
-      setSavings(newSavings)
-    }
+    setStageExpenses(nextProfit < 0 ? 0 : nextProfit)
+    setSavings(newSavings)
   }
 
   function nextPhase(): void {
@@ -229,7 +216,7 @@ export function Game({ onSubmit }: Props): JSX.Element {
                 <Form.Range
                   min={0}
                   value={stageExpenses}
-                  max={savings + profit}
+                  max={savings + profit > 0 ? savings + profit : 0}
                   onChange={(v) => setStageExpenses(v.target.valueAsNumber)}
                 />
                 <ToSpend className="d-none d-sm-block">Gastos com qualidade de vida: R$ {stageExpenses}</ToSpend>
