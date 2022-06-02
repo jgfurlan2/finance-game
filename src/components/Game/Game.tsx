@@ -2,7 +2,7 @@ import React from 'react'
 import { Button, Container, Form, Modal } from 'react-bootstrap'
 
 import { Modals } from './Modals'
-import { Income, Expenses, Profit, Savings, RangeContainer, ToSave, ToSpend, Card, GameInfoWrapper } from './styled'
+import { RangeContainer, ToSave, ToSpend, Card, GameInfoWrapper } from './styled'
 
 interface Props {
   onSubmit: (responses: GameResponse[][]) => void

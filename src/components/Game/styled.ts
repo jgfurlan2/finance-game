@@ -6,14 +6,6 @@ export const Card = styled(BSCard)`
   margin: 0 auto;
 `
 
-export const Income = styled.div``
-
-export const Expenses = styled.div``
-
-export const Profit = styled.div``
-
-export const Savings = styled.div``
-
 export const GameInfoWrapper = styled.div`
   display: grid;
   grid-template-areas:

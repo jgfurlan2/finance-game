@@ -33,7 +33,8 @@ export const Modals: React.FC = () => {
             O gasto fixo e o orçamento são sempre informados no início do período. Basta você escolher entre gastar com
             qualidade de vida ou poupar, como no exemplo abaixo:
           </p>
-          <ModalImage className="img-fluid" src="/imgs/exemplo_1.png" alt="exemplo 1" />
+          <ModalImage className="img-fluid d-none d-sm-block" src="/imgs/exemplo_1.png" alt="exemplo 1" />
+          <ModalImage className="img-fluid d-block d-sm-none" src="/imgs/exemplo_1_mobile.png" alt="exemplo 1" />
           <p>Lembrando: A reserva para emergência ótima cobre dois períodos de gastos fixos.</p>
         </Modal.Body>
         <Modal.Footer>
@@ -49,8 +50,8 @@ export const Modals: React.FC = () => {
             Na mudança dos períodos você verá quanto tem de poupança e pode utilizar o dinheiro acumulado para gastar,
             após arcar com os gastos fixos!
           </p>
-          <ModalImage className="img-fluid" src="/imgs/exemplo_2.png" alt="exemplo 2" />
-          {/* <p>Lembrando: a reserva para emergência ótima cobre dois períodos de gastos fixos.</p> */}
+          <ModalImage className="img-fluid d-none d-sm-block" src="/imgs/exemplo_2.png" alt="exemplo 2" />
+          <ModalImage className="img-fluid d-block d-sm-none" src="/imgs/exemplo_2_mobile.png" alt="exemplo 2" />
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={() => setShowModal(0)}>Entendi! Iniciar o jogo!</Button>
