@@ -100,47 +100,111 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       })
 
       await ses.sendEmail({
-        Source: 'Finance Game <noreply@furlansoftware.com>',
+        Source: 'Jogo do Consumo <noreply@furlansoftware.com>',
         Destination: {
           ToAddresses: [`${name} <${email}>`]
         },
         Message: {
-          Subject: { Data: 'Obrigado por participar do teste!' },
+          Subject: { Data: 'Aqui está o seu desempenho no Jogo do Consumo.' },
           Body: {
             Html: {
               Data: `
-                <table style="width: 100%;font-family:sans-serif">
-                  <thead>
-                    <tr>
-                      <th style="text-align:left;">NÍVEL</th>
-                      <th style="text-align:left;">PERÍODO</th>
-                      <th style="text-align:left;">RENDA</th>
-                      <th style="text-align:left;">DESPESAS FIXAS</th>
-                      <th style="text-align:left;">DESPESAS COM QUALIDADE DE VIDA</th>
-                      <th style="text-align:left;">POUPANÇA NO FINAL DO NÍVEL</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    ${(typeof responses === 'string' ? JSON.parse(responses) : responses).game
-                      .map((l: GameResponse[], il) => {
-                        return l
-                          .map((entries, is) => {
-                            return `
-                              <tr>
-                                <td>${il + 1}</td>
-                                <td>${is + 1}</td>
-                                <td>${entries.income}</td>
-                                <td>${entries.expenses}</td>
-                                <td>${entries.stageExpenses}</td>
-                                <td>${entries.savings}</td>
-                              </tr>
-                            `
+                <!DOCTYPE html>
+                <html lang="en">
+                  <head>
+                    <meta charset="UTF-8" />
+                    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                    <title>Jogo do Consumo</title>
+                    <style>
+                      html, body {
+                        margin: 0 auto;
+                        padding: 0 auto;
+                        font-family: sans-serif;
+                      }
+
+                      table.finance-game-result {
+                        width: fit-content;
+                        font-family: sans-serif;
+                        border-collapse: separate;
+                        border-spacing: 0;
+                      }
+
+                      table.finance-game-result tr > * {
+                        text-align: center;
+                        border: 1px solid rgba(0,0,0, .5);
+                      }
+
+
+                      table.finance-game-result > thead > tr > th {
+                        padding: 8px;
+                        background: gray;
+                      }
+
+                      table.finance-game-result > thead > tr > th:first-child {
+                        border-top-left-radius: 4px;
+                      }
+
+                      table.finance-game-result > thead > tr > th:last-child {
+                        border-top-right-radius: 4px;
+                      }
+
+                      table.finance-game-result > tbody > tr:nth-child(odd) > td {
+                        background: lightgray;
+                      }
+
+                      table.finance-game-result > tbody > tr > td {
+                        padding: 8px;
+                        border-left: 1px solid rgba(0,0,0, .5);
+                        border-right: 1px solid rgba(0,0,0, .5);
+                      }
+
+                      table.finance-game-result > tbody > tr:last-child > td:first-child {
+                        border-bottom-left-radius: 4px;
+                      }
+
+                      table.finance-game-result > tbody > tr:last-child > td:last-child {
+                        border-bottom-right-radius: 4px;
+                      }
+                    </style>
+                  </head>
+                  <body>
+                    <p>Obrigado por participar do Jogo do Consumo! Abaixo está o seu desempenho nas fases do jogo.</p>
+                    <p>Lembrando que o jogo tem fins estritamente acadêmicos e que seus dados não serão compartilhados com ninguém.</p>
+                    <table class="finance-game-result">
+                      <thead>
+                        <tr>
+                          <th>FASE</th>
+                          <th>PERÍODO</th>
+                          <th>RENDA</th>
+                          <th>DESPESAS FIXAS</th>
+                          <th>DESPESAS COM QUALIDADE DE VIDA</th>
+                          <th>POUPANÇA NO FINAL DO PERÍODO</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        ${(typeof responses === 'string' ? JSON.parse(responses) : responses).game
+                          .map((l: GameResponse[], il) => {
+                            return l
+                              .map((entries, is) => {
+                                return `
+                                  <tr>
+                                    <td>${il + 1}</td>
+                                    <td>${is + 1}</td>
+                                    <td>${entries.income}</td>
+                                    <td>${entries.expenses}</td>
+                                    <td>${entries.stageExpenses}</td>
+                                    <td>${entries.savings}</td>
+                                  </tr>
+                                `
+                              })
+                              .join('\n')
                           })
-                          .join('\n')
-                      })
-                      .join('\n')}
-                  </tbody>
-                </table>
+                          .join('\n')}
+                      </tbody>
+                    </table>
+                  </body>
+                </html>
               `
             }
           }

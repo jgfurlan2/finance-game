@@ -19,7 +19,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
   return (
     <>
       <Head>
-        <title>Finance Game</title>
+        <title>Jogo do Consumo</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Component {...pageProps} />

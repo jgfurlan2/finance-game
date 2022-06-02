@@ -148,7 +148,7 @@ export function Home({ onSubmit }: Props): JSX.Element {
                   render={({ field, fieldState }) => (
                     <Form.Group>
                       <Form.Label htmlFor="form-field-age" className="mt-2">
-                        Idade
+                        Idade (+18)
                       </Form.Label>
                       <Form.Control
                         type="number"

@@ -2,7 +2,7 @@ import React from 'react'
 import { Button, Container, Form, Modal } from 'react-bootstrap'
 
 import { Modals } from './Modals'
-import { Income, Expenses, Profit, Savings, RangeContainer, ToSave, ToSpend, Card } from './styled'
+import { Income, Expenses, Profit, Savings, RangeContainer, ToSave, ToSpend, Card, GameInfoWrapper } from './styled'
 
 interface Props {
   onSubmit: (responses: GameResponse[][]) => void
@@ -198,14 +198,20 @@ export function Game({ onSubmit }: Props): JSX.Element {
           <Card className="mt-4">
             <Card.Header>
               <Card.Title>
-                {phase === 0 ? 'Primeira' : 'Segunda'} Fase - Período {stage + 1} de {stages.length}
+                {phase === 0 ? 'Primeira' : 'Segunda'} fase - Período {stage + 1} de {stages.length}
               </Card.Title>
             </Card.Header>
             <Card.Body>
-              <Income>Ganhos no período: R$ {stages[stage].income}</Income>
-              <Expenses>Gastos fixos: R$ {stages[stage].expenses}</Expenses>
-              <Savings>Poupança acumulada nos períodos anteriores: R$ {savings}</Savings>
-              <Profit>Após os gastos fixos e somando sua poupança você tem: R$ {savings + profit}</Profit>
+              <GameInfoWrapper>
+                <div className="income label">Ganhos no período:</div>
+                <div className="income value">R$ {stages[stage].income}</div>
+                <div className="expenses label">Gastos fixos:</div>
+                <div className="expenses value">R$ {stages[stage].expenses}</div>
+                <div className="savings label">Poupança acumulada nos períodos anteriores:</div>
+                <div className="savings value">R$ {savings}</div>
+                <div className="profit-and-savings label">Após os gastos fixos e somando sua poupança você tem:</div>
+                <div className="profit-and-savings value">R$ {savings + profit}</div>
+              </GameInfoWrapper>
               <RangeContainer>
                 <ToSave className="d-none d-sm-block">Poupar: R$ {showToSave(savings)}</ToSave>
                 <ToSave className="d-block d-sm-none" breakLine={true}>
@@ -250,13 +256,14 @@ export function Game({ onSubmit }: Props): JSX.Element {
               <p>10 em que você tem renda e 3 que você está aposentado, com renda zero.</p>
               <p>Além de fazer a mesma poupança de emergência, você precisa poupar para sua aposentadoria.</p>
               <p>
-                Importante: é esperado que sua reverva para aposentadoria represente 10% dos seus ganhos ao longo da
+                Importante: é esperado que sua reserva para aposentadoria represente 10% dos seus ganhos ao longo da
                 vida.
               </p>
             </Modal.Body>
             <Modal.Footer>
               <Button onClick={() => setShowModal((old) => old + 1)}>
-                Certo. Além da reserva de emergência, preciso me preparar para três períodos sem renda. Próximo!
+                Certo. Além da reserva de emergência, a reserva ótima para aposentadoria representa 10% da minha renda.
+                Próximo!
               </Button>
             </Modal.Footer>
           </Modal>
@@ -268,7 +275,7 @@ export function Game({ onSubmit }: Props): JSX.Element {
             <Modal.Body>
               <p>13 períodos, 10 períodos iniciais com renda, 3 últimos sem renda.</p>
               <p>Reserva de emergência permanece em dois períodos de gastos fixos.</p>
-              <p>Reserva para aposentadoria ótima é de 3 períodos de gastos fixos.</p>
+              <p>Reserva para aposentadoria ótima é de 10% da minha renda.</p>
             </Modal.Body>
             <Modal.Footer>
               <Button
