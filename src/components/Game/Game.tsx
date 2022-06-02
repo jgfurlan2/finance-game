@@ -235,7 +235,7 @@ export function Game({ onSubmit }: Props): JSX.Element {
             </Card.Body>
             <Card.Footer>
               {stage < stages.length - 1 ? (
-                <Button onClick={() => nextStage()}>Proximo período</Button>
+                <Button onClick={() => nextStage()}>Próximo período</Button>
               ) : (
                 <Button onClick={() => nextStage()}>Concluir fase</Button>
               )}
