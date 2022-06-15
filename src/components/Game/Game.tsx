@@ -265,15 +265,15 @@ export function Game({ onSubmit }: Props): JSX.Element {
               <p>Além de fazer a mesma poupança de emergência, você precisa poupar para sua aposentadoria.</p>
               <p>
                 <strong>
-                  Importante: é esperado que sua reserva para aposentadoria represente 10% dos seus ganhos ao longo da
-                  vida.
+                  Importante: é esperado que sua reserva para aposentadoria represente 10% da sua renda bruta ao longo
+                  da vida.
                 </strong>
               </p>
             </Modal.Body>
             <Modal.Footer>
               <Button onClick={() => setShowModal((old) => old + 1)}>
-                Certo. Além da reserva de emergência, a reserva ótima para aposentadoria representa 10% da minha renda.
-                Próximo!
+                Certo. Além da reserva de emergência, a reserva ótima para aposentadoria representa 10% da minha renda
+                bruta. Próximo!
               </Button>
             </Modal.Footer>
           </Modal>
