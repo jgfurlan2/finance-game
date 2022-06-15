@@ -38,8 +38,10 @@ declare interface FEFormResponses {
   name: string
   email: string
   age: number
+  cpf: string
   gender: { value: string; label: string }
   education: { value: string; label: string }
+  income: { value: string; label: string }
   questions: string[]
 }
 

@@ -2,6 +2,7 @@ import React from 'react'
 import { Button, Container, Form, Col, Row, Card } from 'react-bootstrap'
 import { useForm, Controller } from 'react-hook-form'
 import ReactSelect from 'react-select'
+import validCPF from '~/utils/validateCpf'
 
 import { Header, Paragraph } from './styled'
 
@@ -167,6 +168,39 @@ export function Home({ onSubmit }: Props): JSX.Element {
             <Row>
               <Col xs={12}>
                 <Controller
+                  name="cpf"
+                  control={control}
+                  rules={{
+                    required: true,
+                    validate: validCPF,
+                    pattern:
+                      /([0-9]{2}[.]?[0-9]{3}[.]?[0-9]{3}[/]?[0-9]{4}[-]?[0-9]{2})|([0-9]{3}[.]?[0-9]{3}[.]?[0-9]{3}[-]?[0-9]{2})/
+                  }}
+                  render={({ field, fieldState }) => (
+                    <Form.Group>
+                      <Form.Label htmlFor="form-field-cpf" className="mt-2">
+                        CPF
+                      </Form.Label>
+                      <Form.Control
+                        type="text"
+                        id="form-field-cpf"
+                        isValid={fieldState.isTouched && !fieldState.error}
+                        isInvalid={!!fieldState.error}
+                        {...field}
+                        value={field.value ?? ''}
+                      />
+                      {(fieldState.error?.type === 'validate' || fieldState.error?.type === 'pattern') && (
+                        <Form.Text>CPF inválido</Form.Text>
+                      )}
+                    </Form.Group>
+                  )}
+                />
+              </Col>
+            </Row>
+
+            <Row>
+              <Col xs={12}>
+                <Controller
                   name="gender"
                   control={control}
                   rules={{ required: true }}
@@ -254,6 +288,55 @@ export function Home({ onSubmit }: Props): JSX.Element {
                         }}
                         placeholder="Selecione..."
                         id="form-field-education"
+                        {...field}
+                        value={field.value ?? { value: '', label: '' }}
+                      />
+                    </Form.Group>
+                  )}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={12}>
+                <Controller
+                  name="income"
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field, fieldState }) => (
+                    <Form.Group>
+                      <Form.Label htmlFor="form-field-income" className="mt-2">
+                        Faixa de renda individual
+                      </Form.Label>
+                      <ReactSelect
+                        options={[
+                          { value: '2424', label: 'Até 2.424 reais mensais' },
+                          { value: '2425-4848', label: 'Entre 2.425 a 4.848 reais mensais' },
+                          { value: '4849-12120', label: 'Entre 4.849 e 12.120 reais mensais' },
+                          { value: '12121+', label: 'Acima de 12.121 reais mensais' }
+                        ]}
+                        styles={{
+                          control(provided, state) {
+                            if (fieldState.isTouched && fieldState.error) {
+                              return {
+                                ...provided,
+                                borderColor: 'var(--bs-red)',
+                                boxShadow: 'none'
+                              }
+                            }
+
+                            if (state.isFocused) {
+                              return {
+                                ...provided,
+                                borderColor: 'var(--bs-blue)',
+                                boxShadow: 'none'
+                              }
+                            }
+
+                            return provided
+                          }
+                        }}
+                        placeholder="Selecione..."
+                        id="form-field-income"
                         {...field}
                         value={field.value ?? { value: '', label: '' }}
                       />

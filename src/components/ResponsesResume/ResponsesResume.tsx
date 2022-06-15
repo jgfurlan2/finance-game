@@ -46,7 +46,7 @@ export const ResponsesResume: React.FC = () => {
               ...gprev,
               [`game-fase-${i + 1}-estagio-${gi + 1}-ganhos`]: gcrr.income,
               [`game-fase-${i + 1}-estagio-${gi + 1}-despesas`]: gcrr.expenses,
-              [`game-fase-${i + 1}-estagio-${gi + 1}-custo-de-vida`]: gcrr.stageExpenses,
+              [`game-fase-${i + 1}-estagio-${gi + 1}-qualidade-de-vida`]: gcrr.stageExpenses,
               [`game-fase-${i + 1}-estagio-${gi + 1}-poupanca`]: gcrr.savings
             }
           }, {})

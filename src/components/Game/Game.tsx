@@ -198,11 +198,19 @@ export function Game({ onSubmit }: Props): JSX.Element {
           <Card className="mt-4">
             <Card.Header>
               <Card.Title>
-                {phase === 0 ? 'Primeira' : 'Segunda'} fase - Período {stage + 1} de {stages.length}
+                {phase === 0 ? 'Primeira' : 'Última'} fase - Período {stage + 1 > 10 ? 'de Aposentadoria ' : ''}
+                {stage + 1} de {stages.length}
               </Card.Title>
             </Card.Header>
             <Card.Body>
               <GameInfoWrapper>
+                <div className="phase-objective">
+                  {phase === 0 ? (
+                    <strong>Objetivo: reserva para emergência</strong>
+                  ) : (
+                    <strong>Objetivo: reserva para emergência e aposentadoria</strong>
+                  )}
+                </div>
                 <div className="income label">Ganhos no período:</div>
                 <div className="income value">R$ {stages[stage].income}</div>
                 <div className="expenses label">Gastos fixos:</div>
@@ -256,8 +264,10 @@ export function Game({ onSubmit }: Props): JSX.Element {
               <p>10 em que você tem renda e 3 que você está aposentado, com renda zero.</p>
               <p>Além de fazer a mesma poupança de emergência, você precisa poupar para sua aposentadoria.</p>
               <p>
-                Importante: é esperado que sua reserva para aposentadoria represente 10% dos seus ganhos ao longo da
-                vida.
+                <strong>
+                  Importante: é esperado que sua reserva para aposentadoria represente 10% dos seus ganhos ao longo da
+                  vida.
+                </strong>
               </p>
             </Modal.Body>
             <Modal.Footer>

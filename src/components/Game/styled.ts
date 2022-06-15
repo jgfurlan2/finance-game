@@ -9,6 +9,7 @@ export const Card = styled(BSCard)`
 export const GameInfoWrapper = styled.div`
   display: grid;
   grid-template-areas:
+    'OBJ OBJ'
     'INC VINC'
     'EXP VEXP'
     'SVG VSVG'
@@ -20,6 +21,10 @@ export const GameInfoWrapper = styled.div`
   > .value {
     font-size: 18px;
     font-weight: 600;
+  }
+
+  > .phase-objectives {
+    grid-area: OBJ;
   }
 
   > .income {
