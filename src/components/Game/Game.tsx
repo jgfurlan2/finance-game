@@ -149,6 +149,10 @@ export function Game({ onSubmit }: Props): JSX.Element {
       setProfit(0)
       setStageExpenses(0)
 
+      if (phase === 1 && nextStage >= stgs.length) {
+        onSubmit(chart)
+      }
+
       return
     }
 
@@ -300,27 +304,6 @@ export function Game({ onSubmit }: Props): JSX.Element {
           </Modal>
         </>
       )}
-
-      <Modal show={phase === 1 && showModal === 1}>
-        <Modal.Header>
-          <Modal.Title>Fim de jogo</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {savings > 0
-            ? `Parabéns! Você conseguiu finalizar o jogo com saldo positivo! Para enviar suas respostas, clique em "Concluir"`
-            : `Parabéns! Você finalizou o jogo! Para enviar suas respostas, clique em "Concluir"`}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            onClick={() => {
-              setShowModal(0)
-              nextPhase()
-            }}
-          >
-            Concluir
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </>
   )
 }

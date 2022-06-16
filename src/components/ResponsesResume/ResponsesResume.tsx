@@ -55,8 +55,10 @@ export const ResponsesResume: React.FC = () => {
       )
 
       return {
+        data: new Date(res.createdAt).toLocaleString(),
         nome: res.name,
         'e-mail': res.email,
+        cpf: res.cpf,
         idade: res.age,
         sexo: res.gender,
         escolaridade: res.education,

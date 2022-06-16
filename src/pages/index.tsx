@@ -27,6 +27,7 @@ export default function Index({ token }: Props): JSX.Element {
       education: response.education.value,
       email: response.email,
       gender: response.gender.value,
+      cpf: response.cpf.replace('.', '').replace('-', '').trim(),
       responses: {
         form: response.questions,
         game: null
@@ -51,6 +52,10 @@ export default function Index({ token }: Props): JSX.Element {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(newFinanceGameData)
+      }).then(async (e) => {
+        if (e.status !== 201) {
+          throw new Error((await e.json())?.error)
+        }
       })
     } catch (e) {
       console.log(e)

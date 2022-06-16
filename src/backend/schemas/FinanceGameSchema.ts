@@ -18,6 +18,11 @@ export const FinanceGameSchema = new EntitySchema<FinanceGameModel>({
       type: 'varchar',
       nullable: false
     },
+    cpf: {
+      type: 'varchar',
+      nullable: false,
+      unique: true
+    },
     age: {
       type: 'int',
       nullable: false

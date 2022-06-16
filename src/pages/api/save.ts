@@ -1,11 +1,11 @@
 import { SES } from '@aws-sdk/client-ses'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { createTransport } from 'nodemailer'
 
 import { BannedTokenSchema } from '~/backend/schemas/BannedTokenSchema'
 import { FinanceGameSchema } from '~/backend/schemas/FinanceGameSchema'
 import { initDatabase } from '~/backend/utils/initDatabase'
 import { verifyAuthToken } from '~/backend/utils/verifyAuthToken'
+import validateCPF from '~/utils/validateCpf'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<{ error?: string }>): Promise<void> {
   try {
@@ -26,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         return
       }
 
-      const { name, email, age, education, gender, responses } = req.body as FinanceGameModel
+      const { name, email, age, cpf, education, gender, responses } = req.body as FinanceGameModel
 
       if (!name || name.trim().length === 0) {
         res.status(400).json({ error: 'Name is required' })
@@ -34,7 +34,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         return
       }
 
-      if (!email || email.trim().length === 0) {
+      if (
+        !email ||
+        email.trim().length === 0 ||
+        (await dataSource.getRepository(FinanceGameSchema).findOne({ where: { email } }))
+      ) {
         res.status(400).json({ error: 'Email is required' })
 
         return
@@ -58,6 +62,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         return
       }
 
+      if (
+        !cpf ||
+        !validateCPF(cpf) ||
+        (await dataSource.getRepository(FinanceGameSchema).findOne({ where: { cpf } }))
+      ) {
+        res.status(400).json({ error: 'CPF is required' })
+
+        return
+      }
+
       if (!responses) {
         res.status(400).json({ error: 'Responses is required' })
 
@@ -69,6 +83,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
           name,
           email,
           age,
+          cpf,
           education,
           gender,
           responses: JSON.stringify(responses),
@@ -79,17 +94,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       })
 
       await dataSource.destroy()
-
-      const transport = createTransport({
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        host: String(process.env.MAIL_HOST),
-        port: process.env.MAIL_PORT,
-        auth: {
-          user: process.env.MAIL_USER,
-          pass: process.env.MAIL_PASS
-        }
-      })
 
       const ses = new SES({
         credentials: {
