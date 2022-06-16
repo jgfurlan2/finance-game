@@ -249,7 +249,7 @@ export function Game({ onSubmit }: Props): JSX.Element {
               {stage < stages.length - 1 ? (
                 <Button onClick={() => nextStage()}>Próximo período</Button>
               ) : (
-                <Button onClick={() => nextStage()}>Concluir fase</Button>
+                <Button onClick={() => nextStage()}>Concluir ${phase === 1 ? 'jogo' : 'fase'}</Button>
               )}
             </Card.Footer>
           </Card>
@@ -289,7 +289,7 @@ export function Game({ onSubmit }: Props): JSX.Element {
             <Modal.Body>
               <p>13 períodos, 10 períodos iniciais com renda, 3 últimos sem renda.</p>
               <p>Reserva de emergência permanece em dois períodos de gastos fixos.</p>
-              <p>Reserva para aposentadoria ótima é de 10% da minha renda.</p>
+              <p>Reserva para aposentadoria ótima é de 10% da minha renda bruta.</p>
             </Modal.Body>
             <Modal.Footer>
               <Button

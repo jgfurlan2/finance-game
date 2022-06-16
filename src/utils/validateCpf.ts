@@ -1,5 +1,5 @@
 export default function validateCPF(strCPF: string): boolean {
-  const normalizedCPF = strCPF.replace('.', '').replace('-', '').trim()
+  const normalizedCPF = strCPF.replace(/./g, '').replace(/-/g, '').trim()
   let sum = 0
   let rest = 0
 

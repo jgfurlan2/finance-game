@@ -12,9 +12,10 @@ import { Home } from '../components/Home'
 
 interface Props {
   token: string
+  emailToken: string
 }
 
-export default function Index({ token }: Props): JSX.Element {
+export default function Index({ token, emailToken }: Props): JSX.Element {
   const [financeGame, setFinanceGame] = React.useState<FEFinanceGame>()
   const [loading, setLoading] = React.useState(false)
   const [gameFinished, setGameFinished] = React.useState(false)
@@ -73,7 +74,13 @@ export default function Index({ token }: Props): JSX.Element {
         {gameFinished ? (
           <End />
         ) : (
-          <>{financeGame == null ? <Home onSubmit={onFormSubmit} /> : <Game onSubmit={onGameSubmit} />}</>
+          <>
+            {financeGame == null ? (
+              <Home onSubmit={onFormSubmit} token={emailToken} />
+            ) : (
+              <Game onSubmit={onGameSubmit} />
+            )}
+          </>
         )}
         <FixedLoading enabled={loading} />
       </Container>
@@ -94,6 +101,6 @@ export default function Index({ token }: Props): JSX.Element {
 
 export const getServerSideProps: GetServerSideProps<Props> = async (_context) => {
   return {
-    props: { token: await TokenService.sign() }
+    props: { token: await TokenService.sign(), emailToken: await TokenService.sign() }
   }
 }
