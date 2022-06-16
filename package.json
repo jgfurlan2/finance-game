@@ -10,7 +10,6 @@
     "typeorm": "typeorm-ts-node-esm"
   },
   "dependencies": {
-    "@aws-sdk/client-ses": "^3.100.0",
     "bcryptjs": "^2.4.3",
     "bootstrap": "^5.1.3",
     "json2csv": "^5.0.7",
