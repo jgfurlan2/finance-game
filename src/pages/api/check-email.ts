@@ -2,6 +2,7 @@ import kickbox from 'kickbox'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import { BannedTokenSchema } from '~/backend/schemas/BannedTokenSchema'
+import { FinanceGameSchema } from '~/backend/schemas/FinanceGameSchema'
 import { initDatabase } from '~/backend/utils/initDatabase'
 import { verifyAuthToken } from '~/backend/utils/verifyAuthToken'
 
@@ -25,21 +26,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return
       }
 
-      const email = req.query.email
-      const kickboxClient = kickbox.client(process.env.KICKBOX_TOKEN).kickbox()
-      const [isValid, reason] = await new Promise((resolve, reject) => {
-        kickboxClient.verify(email, function (err, response) {
-          if (err) {
-            reject(err)
-          }
+      const email = Array.isArray(req.query.email) ? req.query.email[0] : req.query.email
+      let isValid = true
+      let reason = ''
 
-          if (!err && response.body.result === 'deliverable') {
-            resolve([true, null])
-          } else {
-            resolve([false, response.body.reason])
-          }
+      if (await dataSource.getRepository(FinanceGameSchema).findOne({ where: { email } })) {
+        isValid = false
+        reason = 'Email is already in use'
+      } else {
+        const kickboxClient = kickbox.client(process.env.KICKBOX_TOKEN).kickbox()
+
+        ;[isValid, reason] = await new Promise((resolve, reject) => {
+          kickboxClient.verify(email, function (err, response) {
+            if (err) {
+              reject(err)
+            }
+
+            if (!err && response.body.result === 'deliverable') {
+              resolve([true, null])
+            } else {
+              resolve([false, response.body.reason])
+            }
+          })
         })
-      })
+      }
 
       await dataSource.transaction(async (manager) => {
         await manager.getRepository(BannedTokenSchema).save({ token })

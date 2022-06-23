@@ -3,8 +3,6 @@ import { Button, Container, Form, Col, Row, Card } from 'react-bootstrap'
 import { useForm, Controller } from 'react-hook-form'
 import ReactSelect from 'react-select'
 
-import validCPF from '~/utils/validateCpf'
-
 import { FixedLoading } from '../FixedLoading'
 import { Header, Paragraph } from './styled'
 
@@ -195,39 +193,6 @@ export function Home({ onSubmit, token }: Props): JSX.Element {
                           {...field}
                           value={field.value ?? ''}
                         />
-                      </Form.Group>
-                    )}
-                  />
-                </Col>
-              </Row>
-
-              <Row>
-                <Col xs={12}>
-                  <Controller
-                    name="cpf"
-                    control={control}
-                    rules={{
-                      required: true,
-                      validate: validCPF,
-                      pattern:
-                        /([0-9]{2}[.]?[0-9]{3}[.]?[0-9]{3}[/]?[0-9]{4}[-]?[0-9]{2})|([0-9]{3}[.]?[0-9]{3}[.]?[0-9]{3}[-]?[0-9]{2})/
-                    }}
-                    render={({ field, fieldState }) => (
-                      <Form.Group>
-                        <Form.Label htmlFor="form-field-cpf" className="mt-2">
-                          CPF
-                        </Form.Label>
-                        <Form.Control
-                          type="text"
-                          id="form-field-cpf"
-                          isValid={fieldState.isTouched && !fieldState.error}
-                          isInvalid={!!fieldState.error}
-                          {...field}
-                          value={field.value ?? ''}
-                        />
-                        {(fieldState.error?.type === 'validate' || fieldState.error?.type === 'pattern') && (
-                          <Form.Text>CPF inválido</Form.Text>
-                        )}
                       </Form.Group>
                     )}
                   />

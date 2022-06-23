@@ -28,7 +28,6 @@ export default function Index({ token, emailToken }: Props): JSX.Element {
       education: response.education.value,
       email: response.email,
       gender: response.gender.value,
-      cpf: response.cpf.replace('.', '').replace('-', '').trim(),
       responses: {
         form: response.questions,
         game: null
@@ -70,20 +69,23 @@ export default function Index({ token, emailToken }: Props): JSX.Element {
 
   return (
     <>
-      <Container>
-        {gameFinished ? (
-          <End />
-        ) : (
-          <>
-            {financeGame == null ? (
-              <Home onSubmit={onFormSubmit} token={emailToken} />
-            ) : (
-              <Game onSubmit={onGameSubmit} />
-            )}
-          </>
-        )}
-        <FixedLoading enabled={loading} />
-      </Container>
+      {!error && (
+        <Container>
+          {gameFinished ? (
+            <End />
+          ) : (
+            <>
+              {financeGame == null ? (
+                <Home onSubmit={onFormSubmit} token={emailToken} />
+              ) : (
+                <Game onSubmit={onGameSubmit} />
+              )}
+            </>
+          )}
+          <FixedLoading enabled={loading} />
+        </Container>
+      )}
+
       <Modal show={error}>
         <Modal.Header>
           <Modal.Title>Erro ao salvar os dados.</Modal.Title>
