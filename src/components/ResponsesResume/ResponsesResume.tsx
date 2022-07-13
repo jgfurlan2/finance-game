@@ -61,6 +61,7 @@ export const ResponsesResume: React.FC = () => {
         idade: res.age,
         sexo: res.gender,
         escolaridade: res.education,
+        renda: res.income,
         ...flatForm,
         ...flatGame
       }

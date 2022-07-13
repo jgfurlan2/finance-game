@@ -28,6 +28,7 @@ export default function Index({ token, emailToken }: Props): JSX.Element {
       education: response.education.value,
       email: response.email,
       gender: response.gender.value,
+      income: response.income.value,
       responses: {
         form: response.questions,
         game: null

@@ -87,6 +87,7 @@ export function Home({ onSubmit, token }: Props): JSX.Element {
       }
     } catch (e) {
       console.log(e)
+      alert('Ocorreu um erro, recarregue a pagina e tente novamente')
     } finally {
       setIsLoading(false)
     }

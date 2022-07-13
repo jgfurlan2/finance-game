@@ -3,6 +3,7 @@ declare interface FinanceGameModel {
   name: string
   email: string
   age: number
+  income: string
   gender: string
   education: string
   responses: string

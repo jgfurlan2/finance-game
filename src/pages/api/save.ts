@@ -24,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         return
       }
 
-      const { name, email, age, education, gender, responses } = req.body as FinanceGameModel
+      const { name, email, age, education, gender, income, responses } = req.body as FinanceGameModel
 
       if (!name || name.trim().length === 0) {
         res.status(400).json({ error: 'Name is required' })
@@ -54,6 +54,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         return
       }
 
+      if (!income || income.trim().length === 0) {
+        res.status(400).json({ error: 'Income is required' })
+
+        return
+      }
+
       if (!gender || gender.trim().length === 0 || (gender !== 'male' && gender !== 'female' && gender !== 'unknown')) {
         res.status(400).json({ error: 'Gender is required' })
 
@@ -73,6 +79,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
           age,
           education,
           gender,
+          income,
           responses: JSON.stringify(responses),
           createdAt: new Date()
         })

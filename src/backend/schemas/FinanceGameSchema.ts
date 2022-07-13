@@ -26,6 +26,10 @@ export const FinanceGameSchema = new EntitySchema<FinanceGameModel>({
       type: 'varchar',
       nullable: false
     },
+    income: {
+      type: 'varchar',
+      nullable: true
+    },
     education: {
       type: 'varchar',
       nullable: false
