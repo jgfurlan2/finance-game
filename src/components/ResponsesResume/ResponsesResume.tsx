@@ -90,6 +90,7 @@ export const ResponsesResume: React.FC = () => {
             <th>Email</th>
             <th>Idade</th>
             <th>Sexo</th>
+            <th>Data</th>
           </tr>
         </thead>
         <tbody>
@@ -99,6 +100,7 @@ export const ResponsesResume: React.FC = () => {
               <td>{response.email}</td>
               <td>{response.age}</td>
               <td>{response.gender}</td>
+              <td>{new Date(response.createdAt).toLocaleString()}</td>
             </tr>
           ))}
         </tbody>
